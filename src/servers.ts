@@ -60,4 +60,22 @@ export const servers: Server[] = [
     question: "Is the car charged, and is it locked?",
     colors: ["#1d4ed8", "#0ea5e9", "#10b981"],
   },
+  {
+    repo: "octopus-mcp",
+    subject: "energy",
+    product: "Octopus Energy",
+    category: "Energy",
+    summary: "Smart meter usage, tariffs and Agile prices, bills, Intelligent Octopus and Saving Sessions.",
+    question: "When's the cheapest time to run the dishwasher today?",
+    colors: ["#fde047", "#f59e0b", "#c2410c"],
+  },
+  {
+    repo: "hive-mcp",
+    subject: "heating",
+    product: "Hive",
+    category: "Heating",
+    summary: "Check and control the thermostat, hot water, radiator valves, plugs and lights.",
+    question: "Warm the living room to 21° for an hour.",
+    colors: ["#fbbf24", "#f97316", "#b91c1c"],
+  },
 ];
