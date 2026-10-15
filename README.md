@@ -18,6 +18,8 @@
 | [unifi-mcp](https://unifi-mcp.mattoddie.dev) | Ubiquiti UniFi network |
 | [crunch-mcp](https://crunch-mcp.mattoddie.dev) | Crunch Accounting books |
 | [bluelink-mcp](https://bluelink-mcp.mattoddie.dev) | Hyundai, through Bluelink |
+| [octopus-mcp](https://octopus-mcp.mattoddie.dev) | Octopus Energy account and smart meter |
+| [hive-mcp](https://hive-mcp.mattoddie.dev) | Hive heating and hot water |
 
 ## How it works
 

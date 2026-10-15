@@ -5,7 +5,7 @@ import { facts, image, repoUrl, site } from "../lib/github";
 const GITHUB = "https://github.com/mattoddie";
 const title = "MCP servers by Matt Oddie";
 const description =
-  "Open-source Model Context Protocol servers that connect Claude and other AI assistants to Proxmox, UniFi, Crunch Accounting and Hyundai Bluelink. Read-only by default, one Docker container each.";
+  "Open-source Model Context Protocol servers that connect Claude and other AI assistants to Proxmox, UniFi, Crunch Accounting, Hyundai Bluelink, Octopus Energy and Hive. Read-only by default, one Docker container each.";
 
 const cards = await Promise.all(servers.map(async (s) => ({ ...s, ...(await facts(s)) })));
 const totalTools = cards.reduce((n, c) => n + c.tools, 0);
@@ -100,7 +100,8 @@ const connectSnippet = `claude mcp add --transport http <name> \\
           </h1>
           <p class="lede">
             Open-source MCP servers that connect Claude and other AI assistants to the things you run: your home lab, your network,
-            your books and your car. Ask in plain English, and let the assistant make changes only when you allow it.
+            your books, your car, your energy and your heating. Ask in plain English, and let the assistant make changes only when you
+            allow it.
           </p>
           <div class="cta">
             <a class="btn primary" href="#servers">Browse the servers <span aria-hidden="true">↓</span></a>
@@ -226,7 +227,8 @@ const connectSnippet = `claude mcp add --transport http <name> \\
         </div>
         <p>
           MIT © Matt Oddie. These are independent community projects. They are not affiliated with or endorsed by Proxmox Server
-          Solutions GmbH, Ubiquiti Inc., Crunch Accounting or Hyundai Motor Company. Product names are trademarks of their owners.
+          Solutions GmbH, Ubiquiti Inc., Crunch Accounting, Hyundai Motor Company, Octopus Energy or Centrica (British Gas,
+          Hive). Product names are trademarks of their owners.
         </p>
       </div>
     </footer>
