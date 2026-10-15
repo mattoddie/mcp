@@ -1,0 +1,28 @@
+# Rebuilds the site every morning so new releases and tool counts from the
+# server repos show up without a commit here. Uses a Cloudflare Pages deploy
+# hook (Pages project → Settings → Builds → Deploy hooks) stored in the
+# PAGES_DEPLOY_HOOK repository secret.
+name: Refresh
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    name: Trigger a rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the deploy hook
+        env:
+          HOOK: ${{ secrets.PAGES_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::notice::PAGES_DEPLOY_HOOK isn't set, so there's nothing to trigger."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" -o /dev/null
+          echo "Rebuild triggered."
