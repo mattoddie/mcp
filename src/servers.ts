@@ -53,8 +53,8 @@ export const servers: Server[] = [
   },
   {
     repo: "bluelink-mcp",
-    subject: "Hyundai",
-    product: "Hyundai Bluelink",
+    subject: "Hyundai or Kia",
+    product: "Hyundai Bluelink · Kia Connect",
     category: "Car",
     summary: "Check charge, range, locks and location, and pre-heat the cabin or start charging.",
     question: "Is the car charged, and is it locked?",

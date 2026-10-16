@@ -17,7 +17,7 @@
 | [proxmox-mcp](https://proxmox-mcp.mattoddie.dev) | Proxmox VE cluster |
 | [unifi-mcp](https://unifi-mcp.mattoddie.dev) | Ubiquiti UniFi network |
 | [crunch-mcp](https://crunch-mcp.mattoddie.dev) | Crunch Accounting books |
-| [bluelink-mcp](https://bluelink-mcp.mattoddie.dev) | Hyundai, through Bluelink |
+| [bluelink-mcp](https://bluelink-mcp.mattoddie.dev) | Hyundai or Kia, through Bluelink or Kia Connect |
 | [octopus-mcp](https://octopus-mcp.mattoddie.dev) | Octopus Energy account and smart meter |
 | [hive-mcp](https://hive-mcp.mattoddie.dev) | Hive heating and hot water |
 
