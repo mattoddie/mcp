@@ -1,0 +1,81 @@
+---
+/**
+ * The hero drawing: an assistant in the middle, joined by dashed lines to one
+ * tile per server, spaced evenly round a circle (a hexagon for six servers).
+ * Tiles and lines carry data-i so the headline rotator can light up the
+ * server it's naming.
+ */
+import type { Server } from "../servers";
+import { illustration } from "./illustrations";
+
+interface Props {
+  servers: Server[];
+}
+const { servers } = Astro.props;
+
+const cx = 270;
+const cy = 230;
+const radius = 168;
+const round = (n: number) => Math.round(n * 10) / 10;
+const nodes = servers.map((s, i) => {
+  const angle = ((-90 + (i * 360) / servers.length) * Math.PI) / 180;
+  const dot = i % 2 ? 84 : 100; // a node on each line, staggered so they don't form a ring
+  return {
+    s,
+    i,
+    x: round(cx + radius * Math.cos(angle)),
+    y: round(cy + radius * Math.sin(angle)),
+    dx: round(cx + dot * Math.cos(angle)),
+    dy: round(cy + dot * Math.sin(angle)),
+    Glyph: illustration(s.repo),
+  };
+});
+
+const names = servers.map((s) => s.product);
+const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names.join("");
+const label = `An AI assistant in the middle, connected to ${servers.length} servers: ${list}`;
+---
+
+<svg class="hub" role="img" aria-label={label} viewBox="0 0 540 460" width="540" height="460">
+  <defs>
+    {
+      nodes.map(({ s }) => (
+        <linearGradient id={`hd-${s.repo}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color={s.colors[0]} />
+          <stop offset="1" stop-color={s.colors[2]} />
+        </linearGradient>
+      ))
+    }
+    <radialGradient id="hd-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#6366f1" stop-opacity="0.35" />
+      <stop offset="1" stop-color="#6366f1" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx={cx} cy={cy} r="200" fill="url(#hd-glow)" />
+  <circle cx={cx} cy={cy} r="175" fill="none" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3 7" />
+  <g stroke-width="2.5" stroke-dasharray="4 8" stroke-linecap="round">
+    {nodes.map(({ s, i, x, y }) => <line class="hub-line" data-i={i} x1={cx} y1={cy} x2={x} y2={y} stroke={s.colors[1]} />)}
+  </g>
+  <g fill="#ffffff">
+    {nodes.map(({ dx, dy }) => <circle cx={dx} cy={dy} r="4" />)}
+  </g>
+  {
+    nodes.map(({ s, i, x, y, Glyph }) => (
+      <g class="hub-tile" data-i={i} transform={`translate(${round(x - 32)} ${round(y - 32)})`}>
+        <rect class="ring" x="-6" y="-6" width="76" height="76" rx="21" fill="none" stroke={s.colors[1]} stroke-width="2" />
+        <rect width="64" height="64" rx="16" fill={`url(#hd-${s.repo})`} />
+        <Glyph id={s.repo} colors={s.colors} variant="glyph" />
+      </g>
+    ))
+  }
+  <circle cx={cx} cy={cy} r="48" fill="#0d0f18" stroke="#ffffff" stroke-width="2.5" />
+  <path
+    d="M248 216 h44 a8 8 0 0 1 8 8 v14 a8 8 0 0 1 -8 8 h-26 l-10 9 v-9 h-8 a8 8 0 0 1 -8 -8 v-14 a8 8 0 0 1 8 -8 z"
+    fill="#ffffff"
+  />
+  <g fill="#0d0f18">
+    <circle cx="258" cy="231" r="3" />
+    <circle cx="270" cy="231" r="3" />
+    <circle cx="282" cy="231" r="3" />
+  </g>
+</svg>

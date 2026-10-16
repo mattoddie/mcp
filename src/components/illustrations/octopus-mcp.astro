@@ -1,0 +1,40 @@
+---
+// Octopus: a day of half-hourly prices with the cheapest slot picked out, and a bolt.
+import Spot from "./Spot.astro";
+import type { IllustrationProps } from "./types";
+type Props = IllustrationProps;
+const { id, colors, variant = "spot" } = Astro.props;
+const g = `sp-${id}`;
+const cheap = "#1d4ed8";
+
+// An illustrative price shape, not real prices: a morning bump, a cheap afternoon dip and an evening peak.
+const shape = [34, 30, 26, 22, 20, 24, 40, 56, 62, 54, 44, 36, 28, 18, 12, 16, 24, 38, 70, 86, 78, 58, 44, 36];
+const cheapest = shape.indexOf(Math.min(...shape));
+const bars = shape.map((v, i) => ({ x: 34 + i * 12.4, y: 112 - v, h: v, cheap: i === cheapest }));
+---
+
+{
+  variant === "glyph" ? (
+    <g fill="#ffffff">
+      <rect x="12" y="36" width="6" height="14" rx="1.5" />
+      <rect x="21" y="28" width="6" height="22" rx="1.5" />
+      <rect x="30" y="40" width="6" height="10" rx="1.5" fill={cheap} />
+      <rect x="39" y="22" width="6" height="28" rx="1.5" />
+      <rect x="48" y="32" width="6" height="18" rx="1.5" />
+    </g>
+  ) : (
+    <Spot>
+      <defs>
+        <linearGradient id={g} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color={colors[0]} />
+          <stop offset="1" stop-color={colors[2]} />
+        </linearGradient>
+      </defs>
+      <line x1="30" y1="112" x2="330" y2="112" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+      {bars.map((b) => (
+        <rect x={b.x} y={b.y} width="9" height={b.h} rx="2" fill={b.cheap ? cheap : `url(#${g})`} />
+      ))}
+      <path d="M226 14 L214 36 H224 L218 54 L236 28 H226 Z" fill="#ffffff" />
+    </Spot>
+  )
+}

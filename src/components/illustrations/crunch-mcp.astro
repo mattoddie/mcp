@@ -1,0 +1,42 @@
+---
+// Crunch: an invoice beside a rising bar chart.
+import Spot from "./Spot.astro";
+import type { IllustrationProps } from "./types";
+type Props = IllustrationProps;
+const { id, colors, variant = "spot" } = Astro.props;
+const g = `sp-${id}`;
+---
+
+{
+  variant === "glyph" ? (
+    <g fill="#ffffff">
+      <rect x="14" y="36" width="8" height="16" rx="2" />
+      <rect x="26" y="26" width="8" height="26" rx="2" />
+      <rect x="38" y="16" width="8" height="36" rx="2" />
+    </g>
+  ) : (
+    <Spot>
+      <defs>
+        <linearGradient id={g} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color={colors[0]} />
+          <stop offset="1" stop-color={colors[2]} />
+        </linearGradient>
+      </defs>
+      <rect x="54" y="18" width="104" height="100" rx="8" fill="#eceef4" />
+      <rect x="54" y="18" width="104" height="18" rx="8" fill={`url(#${g})`} />
+      <g stroke="#9ba1b3" stroke-width="3" stroke-linecap="round">
+        <line x1="68" y1="52" x2="140" y2="52" />
+        <line x1="68" y1="64" x2="124" y2="64" />
+        <line x1="68" y1="76" x2="132" y2="76" />
+      </g>
+      <line x1="68" y1="100" x2="144" y2="100" stroke={colors[2]} stroke-width="4" stroke-linecap="round" />
+      <g fill={`url(#${g})`}>
+        <rect x="200" y="78" width="20" height="36" rx="4" />
+        <rect x="228" y="62" width="20" height="52" rx="4" />
+        <rect x="256" y="44" width="20" height="70" rx="4" />
+        <rect x="284" y="28" width="20" height="86" rx="4" />
+      </g>
+      <path d="M196 70 L232 52 L262 38 L300 18" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+    </Spot>
+  )
+}

@@ -1,6 +1,9 @@
 ---
 import { servers } from "../servers";
 import { facts, image, repoUrl, site } from "../lib/github";
+import HubDiagram from "../components/HubDiagram.astro";
+import PrincipleIcon from "../components/PrincipleIcon.astro";
+import { illustration } from "../components/illustrations";
 
 const GITHUB = "https://github.com/mattoddie";
 const title = "MCP servers by Matt Oddie";
@@ -13,22 +16,22 @@ const totalPrompts = cards.reduce((n, c) => n + c.prompts, 0);
 
 const principles = [
   {
-    icon: "🛡️",
+    icon: "shield" as const,
     title: "Safe by default",
     text: "Every server starts read-only. Changes, deletes and anything sensitive are separate switches, and tools that aren't allowed aren't registered at all.",
   },
   {
-    icon: "🐳",
+    icon: "container" as const,
     title: "One small container",
     text: "Each server is one Docker image for amd64 and arm64, serving Streamable HTTP with a bearer token, or stdio for a single machine.",
   },
   {
-    icon: "🔌",
+    icon: "plug" as const,
     title: "Any MCP client",
     text: "Claude Code, Claude Desktop, VS Code, Cursor, Codex, or anything else that speaks the Model Context Protocol.",
   },
   {
-    icon: "📚",
+    icon: "book" as const,
     title: "Documented and tested",
     text: "A tool reference generated from the code, a test suite run in CI, and release images with an SBOM and signed provenance.",
   },
@@ -111,29 +114,32 @@ const connectSnippet = `claude mcp add --transport http <name> \\
 
     <main id="main">
       <section class="hero">
-        <div class="wrap">
-          <p class="eyebrow"><span class="dot"></span> Open source · MIT · Model Context Protocol</p>
-          <h1>
-            Talk to your
-            <span class="rotator" aria-live="off">
-              {
-                cards.map((c, i) => (
-                  <span class:list={["word", { on: i === 0 }]} style={`--a:${c.colors[0]};--b:${c.colors[1]};--c:${c.colors[2]}`}>
-                    {c.subject}.
-                  </span>
-                ))
-              }
-            </span>
-          </h1>
-          <p class="lede">
-            Open-source MCP servers that connect Claude and other AI assistants to the things you run: your home lab, your network,
-            your books, your car, your energy and your heating. Ask in plain English, and let the assistant make changes only when you
-            allow it.
-          </p>
-          <div class="cta">
-            <a class="btn primary" href="#servers">Browse the servers <span aria-hidden="true">↓</span></a>
-            <a class="btn ghost" href={GITHUB}>GitHub</a>
+        <div class="wrap hero-inner">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="dot"></span> Open source · MIT · Model Context Protocol</p>
+            <h1>
+              Talk to your
+              <span class="rotator" aria-live="off">
+                {
+                  cards.map((c, i) => (
+                    <span class:list={["word", { on: i === 0 }]} style={`--a:${c.colors[0]};--b:${c.colors[1]};--c:${c.colors[2]}`}>
+                      {c.subject}.
+                    </span>
+                  ))
+                }
+              </span>
+            </h1>
+            <p class="lede">
+              Open-source MCP servers that connect Claude and other AI assistants to the things you run: your home lab, your network,
+              your books, your car, your energy and your heating. Ask in plain English, and let the assistant make changes only when you
+              allow it.
+            </p>
+            <div class="cta">
+              <a class="btn primary" href="#servers">Browse the servers <span aria-hidden="true">↓</span></a>
+              <a class="btn ghost" href={GITHUB}>GitHub</a>
+            </div>
           </div>
+          <HubDiagram servers={cards} />
         </div>
       </section>
 
@@ -151,63 +157,62 @@ const connectSnippet = `claude mcp add --transport http <name> \\
         </div>
         <div class="cards">
           {
-            cards.map((c) => (
-              <article class="card" style={`--a:${c.colors[0]};--b:${c.colors[1]};--c:${c.colors[2]}`}>
-                <div class="card-top">
-                  <img class="logo" src={c.logo} alt="" width="56" height="56" />
-                  <div>
-                    <h3>
-                      <a href={site(c)}>{c.repo}</a>
-                    </h3>
-                    <p class="product">{c.product}</p>
-                  </div>
-                  <span class="category">{c.category}</span>
-                </div>
-                <p class="talk">
-                  Talk to your <span class="grad">{c.subject}.</span>
-                </p>
-                <p class="summary">{c.summary}</p>
-                <blockquote>“{c.question}”</blockquote>
-                <ul class="facts">
-                  <li>
-                    <strong>{c.tools}</strong> tools
-                  </li>
-                  {c.prompts > 0 && (
-                    <li>
-                      <strong>{c.prompts}</strong> prompts
-                    </li>
-                  )}
-                  {c.version && (
-                    <li>
-                      <a href={`${repoUrl(c)}/releases/tag/v${c.version}`}>
-                        <strong>v{c.version}</strong>
+            cards.map((c) => {
+              const Spot = illustration(c.repo);
+              return (
+                <article class="card" style={`--a:${c.colors[0]};--b:${c.colors[1]};--c:${c.colors[2]}`}>
+                  <Spot id={c.repo} colors={c.colors} />
+                  <div class="card-body">
+                    <div class="card-head">
+                      <img class="logo" src={c.logo} alt="" width="28" height="28" />
+                      <h3>
+                        <a href={site(c)}>{c.repo}</a>
+                      </h3>
+                      {c.version && (
+                        <a
+                          class="ver"
+                          href={`${repoUrl(c)}/releases/tag/v${c.version}`}
+                          aria-label={`${c.repo} version ${c.version}${c.released ? `, released ${c.released}` : ""}`}
+                        >
+                          v{c.version}
+                        </a>
+                      )}
+                    </div>
+                    <p class="summary">{c.summary}</p>
+                    <p class="meta">
+                      <strong>{c.tools}</strong> tools
+                      {c.prompts > 0 && (
+                        <Fragment>
+                          {" "}
+                          · <strong>{c.prompts}</strong> prompts
+                        </Fragment>
+                      )}{" "}
+                      · {c.category}
+                    </p>
+                    <div class="pull">
+                      <code>docker pull {image(c)}</code>
+                      <button class="copy" data-copy={`docker pull ${image(c)}`} aria-label={`Copy docker pull command for ${c.repo}`}>
+                        Copy
+                      </button>
+                    </div>
+                    <div class="links">
+                      <a class="btn small primary" href={site(c)} aria-label={`${c.repo} website`}>
+                        Website <span aria-hidden="true">→</span>
                       </a>
-                      {c.released && <span class="date"> · {c.released}</span>}
-                    </li>
-                  )}
-                </ul>
-                <div class="pull">
-                  <code>docker pull {image(c)}</code>
-                  <button class="copy" data-copy={`docker pull ${image(c)}`} aria-label={`Copy docker pull command for ${c.repo}`}>
-                    Copy
-                  </button>
-                </div>
-                <div class="links">
-                  <a class="btn small primary" href={site(c)}>
-                    Website <span aria-hidden="true">→</span>
-                  </a>
-                  <a class="btn small ghost" href={`${site(c)}/docs/getting-started/`}>
-                    Get started
-                  </a>
-                  <a class="btn small ghost" href={`${site(c)}/docs/tools/`}>
-                    Tools
-                  </a>
-                  <a class="btn small ghost" href={repoUrl(c)}>
-                    GitHub
-                  </a>
-                </div>
-              </article>
-            ))
+                      <a class="tlink" href={`${site(c)}/docs/getting-started/`} aria-label={`Get started with ${c.repo}`}>
+                        Get started
+                      </a>
+                      <a class="tlink" href={`${site(c)}/docs/tools/`} aria-label={`${c.repo} tools`}>
+                        Tools
+                      </a>
+                      <a class="tlink" href={repoUrl(c)} aria-label={`${c.repo} on GitHub`}>
+                        GitHub
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
           }
         </div>
       </section>
@@ -222,7 +227,7 @@ const connectSnippet = `claude mcp add --transport http <name> \\
           {
             principles.map((p) => (
               <article class="principle">
-                <span class="p-icon" aria-hidden="true">{p.icon}</span>
+                <PrincipleIcon name={p.icon} />
                 <h3>{p.title}</h3>
                 <p>{p.text}</p>
               </article>
@@ -273,14 +278,22 @@ const connectSnippet = `claude mcp add --transport http <name> \\
         });
       }
 
-      // Cycle the hero's "Talk to your …" through each server's subject.
+      // Cycle the hero's "Talk to your …" through each server's subject, and light up
+      // that server's tile and line in the diagram alongside it.
       const words = [...document.querySelectorAll<HTMLElement>(".rotator .word")];
+      const hub = document.querySelector<SVGElement>(".hub");
+      const mark = (i: number, on: boolean) => {
+        words[i].classList.toggle("on", on);
+        hub?.querySelectorAll(`[data-i="${i}"]`).forEach((el) => el.classList.toggle("on", on));
+      };
       if (words.length > 1 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
         let i = 0;
+        hub?.classList.add("live");
+        mark(0, true);
         setInterval(() => {
-          words[i].classList.remove("on");
+          mark(i, false);
           i = (i + 1) % words.length;
-          words[i].classList.add("on");
+          mark(i, true);
         }, 2600);
       }
     </script>
@@ -324,7 +337,14 @@ const connectSnippet = `claude mcp add --transport http <name> \\
       .nav .gh { display: inline-flex; align-items: center; gap: 8px; color: var(--text) !important; border: 1px solid var(--line); }
 
       /* Hero */
-      .hero { position: relative; overflow: hidden; padding: 110px 0 70px; isolation: isolate; text-align: center; }
+      .hero { position: relative; overflow: hidden; padding: 72px 0 56px; isolation: isolate; }
+      .hero-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 40px; align-items: center; }
+      .hub { display: block; width: 100%; height: auto; }
+      .hub .hub-line { animation: hub-flow 1.2s linear infinite; transition: opacity 0.5s; }
+      @keyframes hub-flow { to { stroke-dashoffset: -12; } }
+      .hub .ring { opacity: 0; transition: opacity 0.5s; }
+      .hub.live .hub-line { opacity: 0.4; }
+      .hub.live .hub-line.on, .hub.live .ring.on, .hub.live .on .ring { opacity: 1; }
       .hero::before {
         content: ""; position: absolute; inset: -20% -10% auto; height: 130%; z-index: -2;
         background:
@@ -341,17 +361,17 @@ const connectSnippet = `claude mcp add --transport http <name> \\
       .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 24px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 13.5px; font-weight: 500; }
       .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.18); }
       h1, h2, h3 { font-family: var(--display); letter-spacing: -0.025em; line-height: 1.08; margin: 0; }
-      h1 { font-size: clamp(42px, 7vw, 84px); font-weight: 700; }
-      .rotator { display: grid; justify-items: center; }
+      h1 { font-size: clamp(40px, 5.4vw, 72px); font-weight: 700; line-height: 1.04; letter-spacing: -0.03em; }
+      .rotator { display: grid; justify-items: start; }
       .rotator .word {
         grid-area: 1 / 1; white-space: nowrap;
         background: linear-gradient(100deg, var(--a), var(--b) 50%, var(--c)); -webkit-background-clip: text; background-clip: text; color: transparent;
         opacity: 0; transform: translateY(0.35em); transition: opacity 0.5s ease, transform 0.5s ease;
       }
       .rotator .word.on { opacity: 1; transform: none; }
-      .lede { font-size: clamp(17px, 1.7vw, 20px); color: #c9cdd9; max-width: 40em; margin: 26px auto 34px; }
-      .cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-      .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: transform 0.15s, box-shadow 0.2s, background 0.2s; }
+      .lede { font-size: clamp(17px, 1.5vw, 19px); color: #c9cdd9; max-width: 34em; margin: 24px 0 30px; text-wrap: pretty; }
+      .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+      .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: transform 0.15s, box-shadow 0.2s, background 0.2s; }
       .btn:hover { transform: translateY(-1px); }
       .btn.primary { background: linear-gradient(135deg, #ea580c, #4f46e5 40%, #0ea5e9 70%, #10b981); color: #fff; box-shadow: 0 8px 30px -8px rgba(79, 70, 229, 0.7); }
       .btn.ghost { border: 1px solid var(--line); background: var(--panel); }
@@ -372,45 +392,42 @@ const connectSnippet = `claude mcp add --transport http <name> \\
       .section-head p:not(.kicker) { color: var(--muted); font-size: 18px; margin: 18px 0 0; }
 
       /* Server cards */
-      .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+      .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
       .card {
-        position: relative; display: flex; flex-direction: column; padding: 28px; border-radius: 22px; overflow: hidden;
-        border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
+        position: relative; display: flex; flex-direction: column; border-radius: 20px; overflow: hidden;
+        border: 1px solid var(--line); background: rgba(255, 255, 255, 0.03);
         transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
       }
-      .card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, var(--a), var(--b), var(--c)); }
-      .card::after { content: ""; position: absolute; inset: -40% -20% auto auto; width: 60%; height: 80%; background: radial-gradient(closest-side, var(--b), transparent); opacity: 0.1; pointer-events: none; }
       .card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--b) 45%, transparent); box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--b) 60%, transparent); }
-      .card-top { display: flex; align-items: center; gap: 16px; }
-      .logo { border-radius: 14px; flex: none; box-shadow: 0 10px 24px -10px var(--b); }
-      .card h3 { font-size: 22px; }
+      .spot { display: block; flex: none; background: radial-gradient(120% 100% at 80% 0%, color-mix(in srgb, var(--b) 28%, transparent), transparent 70%); }
+      .card-body { display: flex; flex-direction: column; flex: 1; gap: 10px; padding: 20px 22px 22px; }
+      .card-head { display: flex; align-items: center; gap: 10px; min-height: 44px; margin: -6px 0 -4px; }
+      .logo { border-radius: 8px; flex: none; }
+      .card h3 { font-size: 22px; min-width: 0; overflow-wrap: anywhere; }
       .card h3 a { text-decoration: none; }
       .card h3 a:hover { text-decoration: underline; text-underline-offset: 4px; }
-      .product { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
-      .category { margin-left: auto; align-self: flex-start; font: 600 12px var(--mono); padding: 4px 10px; border-radius: 999px; color: var(--text); border: 1px solid color-mix(in srgb, var(--b) 50%, transparent); background: color-mix(in srgb, var(--b) 14%, transparent); }
-      .talk { font: 700 clamp(24px, 2.6vw, 30px) / 1.15 var(--display); letter-spacing: -0.02em; margin: 24px 0 8px; }
-      .grad { background: linear-gradient(100deg, var(--a), var(--b) 50%, var(--c)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-      .summary { color: #c9cdd9; margin: 0; }
-      blockquote { margin: 18px 0 0; padding: 12px 16px; border-radius: 12px; font-size: 15px; color: var(--text); background: rgba(0, 0, 0, 0.25); border-left: 3px solid var(--b); }
-      .facts { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
-      .facts li { font-size: 13.5px; color: var(--muted); padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.03); }
-      .facts strong { color: var(--text); font-weight: 600; }
-      .facts a { text-decoration: none; }
-      .facts a:hover strong { text-decoration: underline; }
-      .pull { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding: 8px 8px 8px 14px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.35); }
-      .pull code { min-width: 0; flex: 1; color: #dbe0ee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
+      .ver { margin-left: auto; flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 2px; font: 12px var(--mono); color: var(--muted); text-decoration: none; }
+      .ver:hover { color: var(--text); text-decoration: underline; }
+      .summary { color: #c9cdd9; margin: 0; font-size: 15px; line-height: 1.5; }
+      .meta { margin: 0; font-size: 13.5px; color: var(--muted); }
+      .meta strong { color: var(--text); font-weight: 600; }
+      .pull { display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 4px 4px 4px 12px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.35); }
+      .pull code { min-width: 0; flex: 1; color: #dbe0ee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px; }
       .pull code::before { content: "$ "; color: var(--muted); }
-      .copy { flex: none; cursor: pointer; font: 500 12.5px var(--sans); color: var(--text); padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); }
+      .copy { flex: none; cursor: pointer; min-height: 36px; font: 500 12.5px var(--sans); color: var(--text); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); }
+      .pull .copy { min-height: 44px; min-width: 64px; }
       .copy:hover { background: rgba(255, 255, 255, 0.12); }
-      .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 20px; }
-      .btn.small { padding: 9px 14px; font-size: 14px; border-radius: 10px; }
+      .links { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding-top: 4px; }
+      .btn.small { min-height: 44px; padding: 0 14px; font-size: 14px; border-radius: 10px; margin-right: 4px; }
       .card .btn.primary { background: linear-gradient(135deg, var(--a), var(--b) 60%, var(--c)); box-shadow: 0 8px 24px -10px var(--b); }
+      .tlink { display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
+      .tlink:hover { color: var(--text); background: var(--panel-2); }
 
       /* Principles */
       .principles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
       .principle { padding: 24px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--panel); }
-      .p-icon { font-size: 24px; }
-      .principle h3 { font-size: 19px; margin: 12px 0 8px; }
+      .p-icon { display: block; }
+      .principle h3 { font-size: 19px; margin: 14px 0 8px; }
       .principle p { margin: 0; color: var(--muted); font-size: 15px; }
       .connect { display: grid; grid-template-columns: 1fr 1.1fr; gap: 32px; align-items: center; margin-top: 20px; padding: 32px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--panel); }
       .connect h3 { font-size: 24px; margin-bottom: 10px; }
@@ -428,21 +445,34 @@ const connectSnippet = `claude mcp add --transport http <name> \\
       .foot-links a:hover { color: #a5b4fc; }
       .footer p { margin: 0; color: var(--muted); font-size: 13px; max-width: 70em; }
 
+      @media (max-width: 1080px) {
+        .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 28px; text-align: center; }
+        .hero-copy { display: flex; flex-direction: column; align-items: center; }
+        .rotator { justify-items: center; }
+        .lede { margin-inline: auto; }
+        .cta { justify-content: center; }
+        .hub { max-width: 460px; margin-inline: auto; }
+        .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
       @media (max-width: 960px) {
-        .cards { grid-template-columns: minmax(0, 1fr); }
         .principles { grid-template-columns: repeat(2, 1fr); }
         .connect { grid-template-columns: minmax(0, 1fr); }
       }
       @media (max-width: 640px) {
         .wrap { width: calc(100% - 32px); }
         .hide-sm { display: none; }
-        .hero { padding-top: 72px; }
+        .hero { padding-top: 48px; }
+        .rotator .word { white-space: normal; }
+        .cards { grid-template-columns: minmax(0, 1fr); }
         .stats { grid-template-columns: repeat(2, 1fr); }
         .stats div:nth-child(3) { border-left: none; }
         .stats div:nth-child(n + 3) { border-top: 1px solid var(--line); }
         .principles { grid-template-columns: minmax(0, 1fr); }
-        .card, .connect { padding: 22px; }
+        .connect { padding: 22px; }
         .section { padding-top: 76px; }
+      }
+      @media (max-width: 400px) {
+        .eyebrow { font-size: 12.5px; padding: 6px 12px; gap: 8px; }
       }
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation: none !important; transition: none !important; }
