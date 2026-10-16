@@ -5,7 +5,7 @@ import { facts, image, repoUrl, site } from "../lib/github";
 const GITHUB = "https://github.com/mattoddie";
 const title = "MCP servers by Matt Oddie";
 const description =
-  "Open-source Model Context Protocol servers that connect Claude and other AI assistants to Proxmox, UniFi, Crunch Accounting, Hyundai Bluelink, Octopus Energy and Hive. Read-only by default, one Docker container each.";
+  "Open-source Model Context Protocol servers that connect Claude and other AI assistants to Proxmox, UniFi, Crunch Accounting, Hyundai Bluelink, Kia Connect, Octopus Energy and Hive. Read-only by default, one Docker container each.";
 
 const cards = await Promise.all(servers.map(async (s) => ({ ...s, ...(await facts(s)) })));
 const totalTools = cards.reduce((n, c) => n + c.tools, 0);
@@ -227,7 +227,7 @@ const connectSnippet = `claude mcp add --transport http <name> \\
         </div>
         <p>
           MIT © Matt Oddie. These are independent community projects. They are not affiliated with or endorsed by Proxmox Server
-          Solutions GmbH, Ubiquiti Inc., Crunch Accounting, Hyundai Motor Company, Octopus Energy or Centrica (British Gas,
+          Solutions GmbH, Ubiquiti Inc., Crunch Accounting, Hyundai Motor Company, Kia Corporation, Octopus Energy or Centrica (British Gas,
           Hive). Product names are trademarks of their owners.
         </p>
       </div>
