@@ -1,0 +1,42 @@
+---
+// Bluelink: a car beside its battery charge.
+import Spot from "./Spot.astro";
+import type { IllustrationProps } from "./types";
+type Props = IllustrationProps;
+const { id, colors, variant = "spot" } = Astro.props;
+const g = `sp-${id}`;
+---
+
+{
+  variant === "glyph" ? (
+    <g>
+      <path d="M12 40 h40 v-6 l-6 -8 h-22 l-6 8 z" fill="#ffffff" />
+      <circle cx="21" cy="42" r="4" fill={colors[0]} />
+      <circle cx="43" cy="42" r="4" fill={colors[0]} />
+    </g>
+  ) : (
+    <Spot>
+      <defs>
+        <linearGradient id={g} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color={colors[0]} />
+          <stop offset="1" stop-color={colors[2]} />
+        </linearGradient>
+      </defs>
+      <path
+        d="M40 92 V78 Q40 70 48 69 L70 66 L94 46 Q98 42 106 42 H170 Q178 42 182 48 L198 66 L214 69 Q222 70 222 78 V92 Z"
+        fill={`url(#${g})`}
+      />
+      <path d="M104 64 L114 52 H140 V64 Z M146 52 H168 L180 64 H146 Z" fill="rgba(255,255,255,0.75)" />
+      <g fill="#0d0f18" stroke="#eceef4" stroke-width="3">
+        <circle cx="80" cy="94" r="14" />
+        <circle cx="182" cy="94" r="14" />
+      </g>
+      <rect x="250" y="44" width="70" height="36" rx="7" fill="none" stroke="#eceef4" stroke-width="3" />
+      <rect x="320" y="54" width="6" height="16" rx="2" fill="#eceef4" />
+      <rect x="256" y="50" width="46" height="24" rx="3" fill={`url(#${g})`} />
+      <text x="285" y="104" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="16" fill="#eceef4">
+        80%
+      </text>
+    </Spot>
+  )
+}

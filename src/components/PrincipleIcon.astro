@@ -1,0 +1,60 @@
+---
+// The drawn icons for the "Built the same way, every time" cards. Decorative: the card's heading says it all.
+interface Props {
+  name: "shield" | "container" | "plug" | "book";
+}
+const { name } = Astro.props;
+const stops = {
+  shield: ["#34d399", "#0ea5e9"],
+  container: ["#60a5fa", "#6366f1"],
+  plug: ["#f472b6", "#a855f7"],
+  book: ["#fbbf24", "#f97316"],
+}[name];
+const id = `ic-${name}`;
+const paint = `url(#${id})`;
+---
+
+<svg class="p-icon" width="56" height="56" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color={stops[0]} />
+      <stop offset="1" stop-color={stops[1]} />
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke={paint} stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+    {
+      name === "shield" && (
+        <Fragment>
+          <path d="M28 6 L46 13 V27 C46 39 38 47 28 51 C18 47 10 39 10 27 V13 Z" />
+          <rect x="20" y="24" width="16" height="12" rx="2" fill={paint} stroke="none" />
+          <path d="M23 24 v-4 a5 5 0 0 1 10 0 v4" stroke-width="3" />
+        </Fragment>
+      )
+    }
+    {
+      name === "container" && (
+        <Fragment>
+          <path d="M28 6 L48 17 V39 L28 50 L8 39 V17 Z" />
+          <path d="M8 17 L28 28 L48 17 M28 28 V50" />
+        </Fragment>
+      )
+    }
+    {
+      name === "plug" && (
+        <Fragment>
+          <path d="M20 8 V18 M36 8 V18" />
+          <path d="M14 18 H42 V28 A14 14 0 0 1 14 28 Z" />
+          <path d="M28 42 V50" />
+        </Fragment>
+      )
+    }
+    {
+      name === "book" && (
+        <Fragment>
+          <path d="M28 14 C22 9 14 9 8 11 V45 C14 43 22 43 28 48 C34 43 42 43 48 45 V11 C42 9 34 9 28 14 Z" />
+          <path d="M28 14 V48" />
+        </Fragment>
+      )
+    }
+  </g>
+</svg>

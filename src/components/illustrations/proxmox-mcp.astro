@@ -1,0 +1,49 @@
+---
+// Proxmox: a rack of servers feeding a grid of VMs.
+import Spot from "./Spot.astro";
+import type { IllustrationProps } from "./types";
+type Props = IllustrationProps;
+const { id, colors, variant = "spot" } = Astro.props;
+const g = `sp-${id}`;
+---
+
+{
+  variant === "glyph" ? (
+    <g fill="#ffffff">
+      <rect x="14" y="14" width="36" height="9" rx="2" />
+      <rect x="14" y="27" width="36" height="9" rx="2" />
+      <rect x="14" y="40" width="36" height="9" rx="2" opacity="0.8" />
+    </g>
+  ) : (
+    <Spot>
+      <defs>
+        <linearGradient id={g} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color={colors[0]} />
+          <stop offset="1" stop-color={colors[2]} />
+        </linearGradient>
+      </defs>
+      <g fill={`url(#${g})`}>
+        <rect x="40" y="26" width="110" height="22" rx="5" />
+        <rect x="40" y="54" width="110" height="22" rx="5" />
+        <rect x="40" y="82" width="110" height="22" rx="5" opacity="0.75" />
+      </g>
+      <g fill="#ffffff">
+        <circle cx="54" cy="37" r="3.5" />
+        <circle cx="54" cy="65" r="3.5" />
+        <circle cx="54" cy="93" r="3.5" />
+      </g>
+      <g stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round">
+        <line x1="94" y1="37" x2="138" y2="37" />
+        <line x1="94" y1="65" x2="138" y2="65" />
+        <line x1="94" y1="93" x2="138" y2="93" />
+      </g>
+      <path d="M150 65 h40" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-dasharray="3 5" />
+      <g fill="none" stroke={`url(#${g})`} stroke-width="2.5">
+        <rect x="190" y="30" width="44" height="32" rx="6" />
+        <rect x="246" y="30" width="44" height="32" rx="6" />
+        <rect x="190" y="72" width="44" height="32" rx="6" />
+        <rect x="246" y="72" width="44" height="32" rx="6" stroke-dasharray="5 5" />
+      </g>
+    </Spot>
+  )
+}

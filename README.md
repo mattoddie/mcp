@@ -29,7 +29,9 @@ A single static page built with [Astro](https://astro.build) and hosted on Cloud
 |---|---|
 | `src/servers.ts` | The list of servers and the words on each card |
 | `src/lib/github.ts` | Fetches each server's logo, tool and prompt counts, and latest release from its repository at build time |
-| `src/pages/index.astro` | The page (HTML, CSS and a little JS, no framework) |
+| `src/pages/index.astro` | The page (HTML, CSS and a little JS, no framework): a hero with a diagram of the servers, the server cards and how they work |
+| `src/components/HubDiagram.astro` | The hero diagram: the assistant in the middle and a tile per server, lit up in step with the "Talk to your …" headline |
+| `src/components/illustrations/` | Each server's card banner and diagram glyph, keyed by repo, with a generic fallback in the server's colours |
 | `public/og.png` | Social preview image, rendered from `scripts/og.html` |
 
 Because the numbers come from the server repositories, they can't drift from the projects. If a fetch fails, the build fails, and Cloudflare Pages keeps serving the last good version.
@@ -43,7 +45,7 @@ npm run build   # static site in dist/
 ## Adding a server
 
 1. Make sure the repository has `docs/assets/logo.svg`, a `docs/tools.md` that starts with "has **N tools**", and a [Keep a Changelog](https://keepachangelog.com) `CHANGELOG.md`. Every server built from the same template already does.
-2. Add it to `src/servers.ts`, with colours taken from its logo.
+2. Add it to `src/servers.ts`, with colours taken from its logo. It gets a generic banner and diagram tile in those colours; for its own drawing, add `src/components/illustrations/<repo>.astro` (copy a neighbour) and register it in `index.ts` there.
 3. Add its name to the footer disclaimer in `src/pages/index.astro` if it talks to a third-party product.
 4. Update `scripts/og.html` and re-render `public/og.png` if the social preview should mention it:
 
