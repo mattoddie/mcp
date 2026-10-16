@@ -55,6 +55,33 @@ const connectSnippet = `claude mcp add --transport http <name> \\
     <meta property="og:url" content={Astro.site} />
     <meta property="og:image" content={new URL("/og.png", Astro.site)} />
     <meta name="twitter:card" content="summary_large_image" />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: title,
+        description,
+        url: Astro.site?.href,
+        author: { "@type": "Person", name: "Matt Oddie", url: "https://mattoddie.dev/" },
+        mainEntity: {
+          "@type": "ItemList",
+          itemListElement: cards.map((c, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "SoftwareSourceCode",
+              name: c.repo,
+              description: c.summary,
+              url: `${site(c)}/`,
+              codeRepository: repoUrl(c),
+              license: "https://opensource.org/licenses/MIT",
+              runtimePlatform: "Docker",
+            },
+          })),
+        },
+      })}
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
