@@ -38,7 +38,7 @@ export const servers: Server[] = [
     subject: "UniFi network",
     product: "Ubiquiti UniFi Network",
     category: "Network",
-    summary: "Monitor and manage sites, devices, clients, WiFi, firewall, VPN and guest vouchers.",
+    summary: "Monitor and manage sites, devices, clients, WiFi, firewall, QoS, VPN and guest vouchers.",
     question: "Why is the lounge TV buffering?",
     colors: ["#4f46e5", "#3b82f6", "#06b6d4"],
   },
