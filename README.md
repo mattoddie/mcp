@@ -32,6 +32,7 @@ A single static page built with [Astro](https://astro.build) and hosted on Cloud
 | `src/pages/index.astro` | The page (HTML, CSS and a little JS, no framework): a hero with a diagram of the servers, the server cards and how they work |
 | `src/components/HubDiagram.astro` | The hero diagram: the assistant in the middle and a tile per server, lit up in step with the "Talk to your …" headline |
 | `src/components/illustrations/` | Each server's card banner and diagram glyph, keyed by repo, with a generic fallback in the server's colours |
+| `src/pages/llms.txt.ts` | [`/llms.txt`](https://llmstxt.org) for AI assistants: the hub's summary and every server from `src/servers.ts`, with the same live counts. The title and description live in `src/lib/site.ts`, shared with the page |
 | `public/og.png` | Social preview image, rendered from `scripts/og.html` |
 
 Because the numbers come from the server repositories, they can't drift from the projects. If a fetch fails, the build fails, and Cloudflare Pages keeps serving the last good version.

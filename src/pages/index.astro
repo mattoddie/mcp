@@ -1,14 +1,12 @@
 ---
 import { servers } from "../servers";
 import { facts, image, repoUrl, site } from "../lib/github";
+import { description, title } from "../lib/site";
 import HubDiagram from "../components/HubDiagram.astro";
 import PrincipleIcon from "../components/PrincipleIcon.astro";
 import { illustration } from "../components/illustrations";
 
 const GITHUB = "https://github.com/mattoddie";
-const title = "MCP servers by Matt Oddie";
-const description =
-  "Open-source Model Context Protocol servers that connect Claude and other AI assistants to Proxmox, UniFi, Crunch Accounting, Hyundai Bluelink, Kia Connect, Octopus Energy and Hive. Read-only by default, one Docker container each.";
 
 const cards = await Promise.all(servers.map(async (s) => ({ ...s, ...(await facts(s)) })));
 const totalTools = cards.reduce((n, c) => n + c.tools, 0);
@@ -57,6 +55,9 @@ const connectSnippet = `claude mcp add --transport http <name> \\
     <meta property="og:description" content={description} />
     <meta property="og:url" content={Astro.site} />
     <meta property="og:image" content={new URL("/og.png", Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
     <meta name="twitter:card" content="summary_large_image" />
     <script
       type="application/ld+json"
