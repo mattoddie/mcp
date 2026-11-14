@@ -19,7 +19,7 @@ export const GET: APIRoute = async () => {
   const text = [
     `# ${title}`,
     `> ${description}`,
-    "Every server is MIT licensed, starts read-only with changes behind separate switches, ships as one Docker image for amd64 and arm64, and serves Streamable HTTP with a bearer token or stdio. They work with Claude Code, Claude Desktop, VS Code, Cursor, Codex and any other MCP client.",
+    "Every server is MIT licensed, starts read-only with changes behind separate switches, ships as one Docker image for amd64 and arm64 and as a Homebrew formula for macOS and Linux (brew install mattoddie/tap/<server>), and serves Streamable HTTP with a bearer token or stdio. They work with Claude Code, Claude Desktop, VS Code, Cursor, Codex and any other MCP client.",
     "## Servers",
     lines.join("\n"),
     "## Optional",
