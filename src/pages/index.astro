@@ -20,8 +20,8 @@ const principles = [
   },
   {
     icon: "container" as const,
-    title: "One small container",
-    text: "Each server is one Docker image for amd64 and arm64, serving Streamable HTTP with a bearer token, or stdio for a single machine.",
+    title: "Docker or Homebrew",
+    text: "Each server is one small Docker image for amd64 and arm64, or a Homebrew install on macOS and Linux. It serves Streamable HTTP with a bearer token, or stdio for a single machine.",
   },
   {
     icon: "plug" as const,
@@ -193,6 +193,12 @@ const connectSnippet = `claude mcp add --transport http <name> \\
                     <div class="pull">
                       <code>docker pull {image(c)}</code>
                       <button class="copy" data-copy={`docker pull ${image(c)}`} aria-label={`Copy docker pull command for ${c.repo}`}>
+                        Copy
+                      </button>
+                    </div>
+                    <div class="pull">
+                      <code>brew install mattoddie/tap/{c.repo}</code>
+                      <button class="copy" data-copy={`brew install mattoddie/tap/${c.repo}`} aria-label={`Copy brew install command for ${c.repo}`}>
                         Copy
                       </button>
                     </div>
@@ -418,6 +424,7 @@ const connectSnippet = `claude mcp add --transport http <name> \\
       .pull code::before { content: "$ "; color: var(--muted); }
       .copy { flex: none; cursor: pointer; min-height: 36px; font: 500 12.5px var(--sans); color: var(--text); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); }
       .pull .copy { min-height: 44px; min-width: 64px; }
+      .pull + .pull { margin-top: 8px; }
       .copy:hover { background: rgba(255, 255, 255, 0.12); }
       .links { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding-top: 4px; }
       .btn.small { min-height: 44px; padding: 0 14px; font-size: 14px; border-radius: 10px; margin-right: 4px; }
